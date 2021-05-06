@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${appName}"></title>
+</head>
+<body>
+    <form method="get" action=".">
+        <label for="locationInput">Location:</label>
+        <input type="text" name="location" id="locationInput">
+        <button type="submit">Submit</button>
+    </form>
+    <p th:text="${locationData}" th:if="${locationData ne null}"></p>
+</body>
+</html>
