@@ -1,19 +1,19 @@
 package ua.plaranjinha.tqs_hw.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.plaranjinha.tqs_hw.datamodels.CacheData;
+import ua.plaranjinha.tqs_hw.datamodels.FullCacheData;
 import ua.plaranjinha.tqs_hw.datamodels.FullData;
-import ua.plaranjinha.tqs_hw.services.SwitcherService;
+import ua.plaranjinha.tqs_hw.services.CacheService;
 
 @org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/air_quality")
 public class RestController {
     @Autowired
-    SwitcherService service;
+    CacheService service;
 
     @GetMapping("/current/location/{location},{countryCode}")
     FullData getDataFromLocation(@PathVariable String location, @PathVariable String countryCode) {
@@ -46,7 +46,7 @@ public class RestController {
     }
 
     @GetMapping("/cached")
-    CacheData getDataFromCache() {
+    FullCacheData getDataFromCache() {
         return service.getDataFromCache();
     }
 }

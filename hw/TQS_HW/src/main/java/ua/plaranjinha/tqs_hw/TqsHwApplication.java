@@ -11,7 +11,6 @@ public class TqsHwApplication {
 	}
 
 	//TODO:
-	// Cache
 	// Decent looking and working frontend (with data formatting)
 	// Tests
 	// 14/05 - Deliver report of the WHOLE app
