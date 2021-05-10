@@ -15,22 +15,22 @@ public class FullDataCache {
     public CacheData get(StringKey key) {
         CacheData data = locationCache.get(key);
         if (expired(data)) {
-            remove(key);
+            if (data != null) remove(key);
             return null;
         }
         data.setQueries(data.getQueries()+1);
-        data.setLastQuery(System.nanoTime());
+        data.setLast_query(System.nanoTime());
         return data;
     }
 
     public CacheData get(DoubleKey key) {
         CacheData data = coordsCache.get(key);
         if (expired(data)) {
-            remove(key);
+            if (data != null) remove(key);
             return null;
         }
         data.setQueries(data.getQueries()+1);
-        data.setLastQuery(System.nanoTime());
+        data.setLast_query(System.nanoTime());
         return data;
     }
 
@@ -49,7 +49,7 @@ public class FullDataCache {
     }
 
     public CacheData remove(DoubleKey key) {
-        CacheData data = coordsCache.get(key);
+        CacheData data = coordsCache.remove(key);
         locationCache.remove(new StringKey(data.getData().getLocation(), data.getData().getCountry_code()));
         return data;
     }
@@ -68,7 +68,7 @@ public class FullDataCache {
     }
 
     private boolean expired(CacheData data) {
-        return (data == null) || ((System.nanoTime() - data.getLastQuery()) > TTL);
+        return (data == null) || ((System.nanoTime() - data.getLast_query()) > TTL);
     }
 
     private void clearExpired() {

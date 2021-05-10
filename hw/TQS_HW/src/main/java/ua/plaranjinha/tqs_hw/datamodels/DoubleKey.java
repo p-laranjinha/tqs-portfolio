@@ -3,8 +3,8 @@ package ua.plaranjinha.tqs_hw.datamodels;
 import java.util.Objects;
 
 public class DoubleKey {
-    public Double key1;
-    public Double key2;
+    public final Double key1;
+    public final Double key2;
 
     public DoubleKey(Double key1, Double key2) {
         this.key1 = key1;

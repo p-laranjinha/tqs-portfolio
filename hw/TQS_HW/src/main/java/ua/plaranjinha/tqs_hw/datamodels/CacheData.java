@@ -5,12 +5,12 @@ import lombok.Data;
 @Data
 public class CacheData {
     private FullData data;
-    private long lastQuery;
+    private long last_query;
     private int queries;
 
-    public CacheData(FullData data, long lastQuery) {
+    public CacheData(FullData data, long last_query) {
         this.data = data;
-        this.lastQuery = lastQuery;
-        this.queries = 1;
+        this.last_query = last_query;
+        this.queries = 0;
     }
 }

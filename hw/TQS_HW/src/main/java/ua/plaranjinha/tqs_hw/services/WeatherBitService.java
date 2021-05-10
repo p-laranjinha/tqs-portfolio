@@ -23,12 +23,12 @@ public class WeatherBitService {
     @Autowired
     RestTemplate restTemplate;
 
-    String locationURL = "http://api.weatherbit.io/v2.0/current/airquality?city=%s&country=%s&key=%s";
-    String coordsURL = "http://api.weatherbit.io/v2.0/current/airquality?lat=%f&lon=%f&key=%s";
-    String locationURLh = "http://api.weatherbit.io/v2.0/history/airquality?city=%s&country=%s&key=%s";
-    String coordsURLh = "http://api.weatherbit.io/v2.0/history/airquality?lat=%f&lon=%f&key=%s";
-    String locationURLf = "http://api.weatherbit.io/v2.0/forecast/airquality?city=%s&country=%s&key=%s";
-    String coordsURLf = "http://api.weatherbit.io/v2.0/forecast/airquality?lat=%f&lon=%f&key=%s";
+    final String locationURL = "http://api.weatherbit.io/v2.0/current/airquality?city=%s&country=%s&key=%s";
+    final String coordsURL = "http://api.weatherbit.io/v2.0/current/airquality?lat=%f&lon=%f&key=%s";
+    final String locationURLh = "http://api.weatherbit.io/v2.0/history/airquality?city=%s&country=%s&key=%s";
+    final String coordsURLh = "http://api.weatherbit.io/v2.0/history/airquality?lat=%f&lon=%f&key=%s";
+    final String locationURLf = "http://api.weatherbit.io/v2.0/forecast/airquality?city=%s&country=%s&key=%s";
+    final String coordsURLf = "http://api.weatherbit.io/v2.0/forecast/airquality?lat=%f&lon=%f&key=%s";
 
     FullData getDataFromLocation(String location, String countryCode) {
         return getData(locationURL, location, countryCode);
@@ -40,12 +40,14 @@ public class WeatherBitService {
 
     FullData getDataFromLocationHistory(String location, String countryCode) {
         FullData result = getData(locationURLh, location, countryCode);
+        if (result == null) return null;
         result.getAir_pollution().sort(Comparator.comparing(FullDataAirPollution::getTime));
         return result;
     }
 
     FullData getDataFromCoordsHistory(double lat, double lon) {
         FullData result = getData(coordsURLh, lat, lon);
+        if (result == null) return null;
         result.getAir_pollution().sort(Comparator.comparing(FullDataAirPollution::getTime));
         return result;
     }
@@ -58,8 +60,8 @@ public class WeatherBitService {
         return getData(coordsURLf, lat, lon);
     }
 
-    FullData getData(String url, Object x, Object y) {
-        logger.info(String.format(Locale.US, url, x, y, apiKey));
+    private FullData getData(String url, Object x, Object y) {
+        //logger.info(String.format(Locale.US, url, x, y, apiKey));
         WBAirPollution airPollution = restTemplate.getForObject(String.format(Locale.US, url, x, y, apiKey), WBAirPollution.class);
         if (airPollution == null || airPollution.getData().isEmpty())
             return null;

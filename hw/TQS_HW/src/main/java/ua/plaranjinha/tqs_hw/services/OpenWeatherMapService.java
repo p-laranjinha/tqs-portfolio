@@ -16,17 +16,20 @@ public class OpenWeatherMapService {
     @Autowired
     Logger logger;
 
+    @Autowired
+    Calendar calendar;
+
     @Value("${custom.api.openweathermap.key}")
     String apiKey;
 
     @Autowired
     RestTemplate restTemplate;
 
-    String geoURL = "http://api.openweathermap.org/geo/1.0/direct?q=%s,%s&limit=1&appid=%s";
-    String geoURLr = "http://api.openweathermap.org/geo/1.0/reverse?lat=%f&lon=%f&limit=1&appid=%s";
-    String airURL = "http://api.openweathermap.org/data/2.5/air_pollution?lat=%f&lon=%f&appid=%s";
-    String airURLh = "http://api.openweathermap.org/data/2.5/air_pollution/history?lat=%f&lon=%f&start=%d&end=%d&appid=%s";
-    String airURLf = "http://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=%f&lon=%f&appid=%s";
+    final String geoURL = "http://api.openweathermap.org/geo/1.0/direct?q=%s,%s&limit=1&appid=%s";
+    final String geoURLr = "http://api.openweathermap.org/geo/1.0/reverse?lat=%f&lon=%f&limit=1&appid=%s";
+    final String airURL = "http://api.openweathermap.org/data/2.5/air_pollution?lat=%f&lon=%f&appid=%s";
+    final String airURLh = "http://api.openweathermap.org/data/2.5/air_pollution/history?lat=%f&lon=%f&start=%d&end=%d&appid=%s";
+    final String airURLf = "http://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=%f&lon=%f&appid=%s";
 
     FullData getDataFromLocation(String location, String countryCode) {
         OWMGeolocation geolocation = getGeolocation(geoURL, location, countryCode);
@@ -71,7 +74,7 @@ public class OpenWeatherMapService {
     }
 
     private OWMGeolocation getGeolocation(String url, Object x, Object y) {
-        logger.info(String.format(url, x, y, apiKey));
+        //logger.info(String.format(url, x, y, apiKey));
         OWMGeolocation[] geolocationList = restTemplate.getForObject(String.format(url, x, y, apiKey), OWMGeolocation[].class);
         if (geolocationList == null || geolocationList.length == 0)
             return null;
@@ -79,7 +82,7 @@ public class OpenWeatherMapService {
     }
 
     private FullData getData(OWMGeolocation geolocation) {
-        logger.info(String.format(airURL, geolocation.getLat(), geolocation.getLon(), apiKey));
+        //logger.info(String.format(airURL, geolocation.getLat(), geolocation.getLon(), apiKey));
         OWMAirPollutionList airPollutionList = restTemplate.getForObject(String.format(airURL, geolocation.getLat(), geolocation.getLon(), apiKey), OWMAirPollutionList.class);
 
         if (airPollutionList == null || airPollutionList.getList().isEmpty())
@@ -88,12 +91,12 @@ public class OpenWeatherMapService {
     }
 
     private FullData getDataHistory(OWMGeolocation geolocation) {
-        Calendar calendar = Calendar.getInstance();
         long end = calendar.getTime().getTime() / 1000L;
         calendar.add(Calendar.HOUR, -72);
         long start = calendar.getTime().getTime() / 1000L;
+        calendar.add(Calendar.HOUR, 72);
 
-        logger.info(String.format(airURLh, geolocation.getLat(), geolocation.getLon(), start, end, apiKey));
+        //logger.info(String.format(airURLh, geolocation.getLat(), geolocation.getLon(), start, end, apiKey));
         OWMAirPollutionList airPollutionList = restTemplate.getForObject(String.format(airURLh, geolocation.getLat(), geolocation.getLon(), start, end, apiKey), OWMAirPollutionList.class);
 
         if (airPollutionList == null || airPollutionList.getList().isEmpty())
@@ -102,12 +105,11 @@ public class OpenWeatherMapService {
     }
 
     private FullData getDataForecast(OWMGeolocation geolocation) {
-        logger.info(String.format(airURLf, geolocation.getLat(), geolocation.getLon(), apiKey));
+        //logger.info(String.format(airURLf, geolocation.getLat(), geolocation.getLon(), apiKey));
         OWMAirPollutionList airPollutionList = restTemplate.getForObject(String.format(airURLf, geolocation.getLat(), geolocation.getLon(), apiKey), OWMAirPollutionList.class);
 
         if (airPollutionList == null || airPollutionList.getList().isEmpty())
             return null;
-        Calendar calendar = Calendar.getInstance();
         long now = calendar.getTime().getTime() / 1000L;
         airPollutionList.getList().removeIf(x -> (x.getDt() < now));
         airPollutionList.setList(airPollutionList.getList().subList(0, 72));

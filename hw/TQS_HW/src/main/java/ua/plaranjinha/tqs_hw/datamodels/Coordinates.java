@@ -11,4 +11,6 @@ public class Coordinates {
         this.setLon(lon);
         this.setLat(lat);
     }
+
+    public Coordinates() {}
 }

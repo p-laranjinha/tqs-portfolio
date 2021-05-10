@@ -53,4 +53,6 @@ public class FullData {
             air_pollution.add(y);
         }
     }
+
+    public FullData() {}
 }

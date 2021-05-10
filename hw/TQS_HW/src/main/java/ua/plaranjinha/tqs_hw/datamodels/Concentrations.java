@@ -30,4 +30,6 @@ public class Concentrations {
         pm2_5 = data.getPm25();
         pm10 = data.getPm10();
     }
+
+    public Concentrations() {}
 }

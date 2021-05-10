@@ -11,7 +11,9 @@ public class TqsHwApplication {
 	}
 
 	//TODO:
+	// Input validation / Exception handling (REST country code length (the nulls may be enough))
 	// Decent looking and working frontend (with data formatting)
-	// Tests
+	// Logging (which doesnt mess with testing)
+	// Selenium tests
 	// 14/05 - Deliver report of the WHOLE app
 }

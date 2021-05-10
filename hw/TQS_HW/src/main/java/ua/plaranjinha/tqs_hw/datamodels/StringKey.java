@@ -3,8 +3,8 @@ package ua.plaranjinha.tqs_hw.datamodels;
 import java.util.Objects;
 
 public class StringKey {
-    public String key1;
-    public String key2;
+    public final String key1;
+    public final String key2;
 
     public StringKey(String key1, String key2) {
         this.key1 = key1;

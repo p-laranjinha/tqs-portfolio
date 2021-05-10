@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 import ua.plaranjinha.tqs_hw.TqsHwApplication;
 
+import java.util.Calendar;
+
 @org.springframework.context.annotation.Configuration
 public class Configs {
 
@@ -18,6 +20,11 @@ public class Configs {
     @Bean
     public Logger logger() {
         return LoggerFactory.getLogger(TqsHwApplication.class);
+    }
+
+    @Bean
+    public Calendar calendar() {
+        return Calendar.getInstance();
     }
 
 }
