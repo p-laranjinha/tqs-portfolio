@@ -48,6 +48,10 @@ public class CacheService {
     }
 
     public FullData getDataFromCoords(double lat, double lon) {
+        if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+            nFailedRequests++;
+            return null;
+        }
         DoubleKey key = new DoubleKey(lat, lon);
         if (currentCache.containsKey(key)) {
             CacheData cacheData = currentCache.get(key);
@@ -98,6 +102,10 @@ public class CacheService {
     }
 
     public FullData getDataFromCoordsHistory(double lat, double lon) {
+        if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+            nFailedRequests++;
+            return null;
+        }
         DoubleKey key = new DoubleKey(lat, lon);
         if (historyCache.containsKey(key)) {
             CacheData cacheData = historyCache.get(key);
@@ -148,6 +156,10 @@ public class CacheService {
     }
 
     public FullData getDataFromCoordsForecast(double lat, double lon) {
+        if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+            nFailedRequests++;
+            return null;
+        }
         DoubleKey key = new DoubleKey(lat, lon);
         if (forecastCache.containsKey(key)) {
             CacheData cacheData = forecastCache.get(key);

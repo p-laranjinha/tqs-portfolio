@@ -6,10 +6,40 @@
 </head>
 <body>
     <form method="get" action=".">
+        <input type="hidden" name="request" value="location">
+        <h5>Get air pollution with location</h5>
         <label for="locationInput">Location:</label>
         <input type="text" name="location" id="locationInput">
-        <button type="submit">Submit</button>
+        <label for="countryCodeInput">Country code:</label>
+        <input type="text" name="country_code" id="countryCodeInput">
+        <label for="typeLocationInput">Type:</label>
+        <select name="type" id="typeLocationInput">
+            <option value="current">Current</option>
+            <option value="history">History</option>
+            <option value="forecast">Forecast</option>
+        </select>
+        <button type="submit">Get</button>
     </form>
-    <p th:text="${locationData}" th:if="${locationData ne null}"></p>
+    <form method="get" action=".">
+        <input type="hidden" name="request" value="coords">
+        <h5>Get air pollution with coordinates</h5>
+        <label for="latInput">Latitude:</label>
+        <input type="number" name="lat" id="latInput" step="0.0001">
+        <label for="lonInput">Longitude:</label>
+        <input type="number" name="lon" id="lonInput" step="0.0001">
+        <label for="typeCoordsInput">Type:</label>
+        <select name="type" id="typeCoordsInput">
+            <option value="current">Current</option>
+            <option value="history">History</option>
+            <option value="forecast">Forecast</option>
+        </select>
+        <button type="submit">Get</button>
+    </form>
+    <form method="get" action=".">
+        <input type="hidden" name="request" value="cached">
+        <h5>Get cached requests + info</h5>
+        <button type="submit">Get</button>
+    </form>
+    <pre th:text="${data}" th:if="${data ne null}" style="width: 100vw"></pre>
 </body>
 </html>

@@ -53,7 +53,7 @@ public class RestController {
     }
 
     @GetMapping("/cached")
-    FullCacheData getDataFromCache() {
-        return service.getDataFromCache();
+    ResponseEntity<FullCacheData> getDataFromCache() {
+        return new ResponseEntity<>(service.getDataFromCache(), HttpStatus.OK);
     }
 }
