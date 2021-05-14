@@ -6,10 +6,15 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.test.web.servlet.MockMvc;
+import ua.plaranjinha.tqs_hw.TqsHwApplication;
 import ua.plaranjinha.tqs_hw.datamodels.CacheData;
 import ua.plaranjinha.tqs_hw.datamodels.FullCacheData;
 import ua.plaranjinha.tqs_hw.datamodels.FullData;
@@ -24,6 +29,13 @@ import static org.hamcrest.Matchers.is;
 
 @WebMvcTest(RestController.class)
 class RestControllerIT {
+    @TestConfiguration
+    static class TestConfigs {
+        @Bean
+        public Logger logger() {
+            return LoggerFactory.getLogger(TqsHwApplication.class);
+        }
+    }
 
     @Autowired
     MockMvc mvc;

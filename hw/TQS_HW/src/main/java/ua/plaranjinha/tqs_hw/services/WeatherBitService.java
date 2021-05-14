@@ -1,6 +1,5 @@
 package ua.plaranjinha.tqs_hw.services;
 
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,9 +13,6 @@ import java.util.Locale;
 
 @Service
 public class WeatherBitService {
-    @Autowired
-    Logger logger;
-
     @Value("${custom.api.weatherbit.key}")
     String apiKey;
 
@@ -61,7 +57,6 @@ public class WeatherBitService {
     }
 
     private FullData getData(String url, Object x, Object y) {
-        //logger.info(String.format(Locale.US, url, x, y, apiKey));
         WBAirPollution airPollution = restTemplate.getForObject(String.format(Locale.US, url, x, y, apiKey), WBAirPollution.class);
         if (airPollution == null || airPollution.getData().isEmpty())
             return null;

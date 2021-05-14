@@ -1,6 +1,5 @@
 package ua.plaranjinha.tqs_hw.services;
 
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,9 +12,6 @@ import java.util.Calendar;
 
 @Service
 public class OpenWeatherMapService {
-    @Autowired
-    Logger logger;
-
     @Autowired
     Calendar calendar;
 
@@ -74,7 +70,6 @@ public class OpenWeatherMapService {
     }
 
     private OWMGeolocation getGeolocation(String url, Object x, Object y) {
-        //logger.info(String.format(url, x, y, apiKey));
         OWMGeolocation[] geolocationList = restTemplate.getForObject(String.format(url, x, y, apiKey), OWMGeolocation[].class);
         if (geolocationList == null || geolocationList.length == 0)
             return null;
@@ -82,7 +77,6 @@ public class OpenWeatherMapService {
     }
 
     private FullData getData(OWMGeolocation geolocation) {
-        //logger.info(String.format(airURL, geolocation.getLat(), geolocation.getLon(), apiKey));
         OWMAirPollutionList airPollutionList = restTemplate.getForObject(String.format(airURL, geolocation.getLat(), geolocation.getLon(), apiKey), OWMAirPollutionList.class);
 
         if (airPollutionList == null || airPollutionList.getList().isEmpty())
@@ -96,7 +90,6 @@ public class OpenWeatherMapService {
         long start = calendar.getTime().getTime() / 1000L;
         calendar.add(Calendar.HOUR, 72);
 
-        //logger.info(String.format(airURLh, geolocation.getLat(), geolocation.getLon(), start, end, apiKey));
         OWMAirPollutionList airPollutionList = restTemplate.getForObject(String.format(airURLh, geolocation.getLat(), geolocation.getLon(), start, end, apiKey), OWMAirPollutionList.class);
 
         if (airPollutionList == null || airPollutionList.getList().isEmpty())
@@ -105,7 +98,6 @@ public class OpenWeatherMapService {
     }
 
     private FullData getDataForecast(OWMGeolocation geolocation) {
-        //logger.info(String.format(airURLf, geolocation.getLat(), geolocation.getLon(), apiKey));
         OWMAirPollutionList airPollutionList = restTemplate.getForObject(String.format(airURLf, geolocation.getLat(), geolocation.getLon(), apiKey), OWMAirPollutionList.class);
 
         if (airPollutionList == null || airPollutionList.getList().isEmpty())

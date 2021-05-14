@@ -10,6 +10,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.internal.verification.VerificationModeFactory;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import ua.plaranjinha.tqs_hw.TqsHwApplication;
 import ua.plaranjinha.tqs_hw.datamodels.CacheData;
 import ua.plaranjinha.tqs_hw.datamodels.FullCacheData;
 import ua.plaranjinha.tqs_hw.datamodels.FullData;
@@ -18,6 +23,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 class CacheServiceTest {
+    @Mock(lenient = true)
+    private Logger logger;
 
     @Mock(lenient = true)
     private OpenWeatherMapService owmService;
@@ -448,6 +455,94 @@ class CacheServiceTest {
         Mockito.verify(owmService, VerificationModeFactory.times(1)).getDataFromCoordsForecast(Mockito.anyDouble(), Mockito.anyDouble());
         Mockito.verify(wbService, VerificationModeFactory.times(1)).getDataFromCoordsForecast(Mockito.anyDouble(), Mockito.anyDouble());
         checkServiceRequestNums(0, 0, 0, 1);
+    }
+
+    @Test
+    void getDataFromLocationInvalidInputs() {
+        Mockito.when(owmService
+                .getDataFromLocation(Mockito.anyString(), Mockito.anyString()))
+                .thenReturn(currentData);
+
+        assertThat(cacheService.getDataFromLocation("","")).isEqualTo(currentData);
+        assertThat(cacheService.getDataFromLocation("","1")).isEqualTo(currentData);
+        assertThat(cacheService.getDataFromLocation("","12")).isEqualTo(currentData);
+        assertThat(cacheService.getDataFromLocation("","123")).isEqualTo(null);
+        checkServiceRequestNums(3, 0, 0, 1);
+    }
+
+    @Test
+    void getDataFromCoordsInvalidInputs() {
+        Mockito.when(owmService
+                .getDataFromCoords(Mockito.anyDouble(), Mockito.anyDouble()))
+                .thenReturn(currentData);
+
+        assertThat(cacheService.getDataFromCoords(0,0)).isEqualTo(currentData);
+        assertThat(cacheService.getDataFromCoords(90,180)).isEqualTo(currentData);
+        assertThat(cacheService.getDataFromCoords(-90,-180)).isEqualTo(currentData);
+        assertThat(cacheService.getDataFromCoords(-90.1,0)).isEqualTo(null);
+        assertThat(cacheService.getDataFromCoords(90.1,0)).isEqualTo(null);
+        assertThat(cacheService.getDataFromCoords(0,-180.1)).isEqualTo(null);
+        assertThat(cacheService.getDataFromCoords(0,180.1)).isEqualTo(null);
+        checkServiceRequestNums(3, 0, 0, 4);
+    }
+
+    @Test
+    void getDataFromLocationHistoryInvalidInputs() {
+        Mockito.when(owmService
+                .getDataFromLocationHistory(Mockito.anyString(), Mockito.anyString()))
+                .thenReturn(historyData);
+
+        assertThat(cacheService.getDataFromLocationHistory("","")).isEqualTo(historyData);
+        assertThat(cacheService.getDataFromLocationHistory("","1")).isEqualTo(historyData);
+        assertThat(cacheService.getDataFromLocationHistory("","12")).isEqualTo(historyData);
+        assertThat(cacheService.getDataFromLocationHistory("","123")).isEqualTo(null);
+        checkServiceRequestNums(3, 0, 0, 1);
+
+    }
+
+    @Test
+    void getDataFromCoordsHistoryInvalidInputs() {
+        Mockito.when(owmService
+                .getDataFromCoordsHistory(Mockito.anyDouble(), Mockito.anyDouble()))
+                .thenReturn(historyData);
+
+        assertThat(cacheService.getDataFromCoordsHistory(0,0)).isEqualTo(historyData);
+        assertThat(cacheService.getDataFromCoordsHistory(90,180)).isEqualTo(historyData);
+        assertThat(cacheService.getDataFromCoordsHistory(-90,-180)).isEqualTo(historyData);
+        assertThat(cacheService.getDataFromCoordsHistory(-90.1,0)).isEqualTo(null);
+        assertThat(cacheService.getDataFromCoordsHistory(90.1,0)).isEqualTo(null);
+        assertThat(cacheService.getDataFromCoordsHistory(0,-180.1)).isEqualTo(null);
+        assertThat(cacheService.getDataFromCoordsHistory(0,180.1)).isEqualTo(null);
+        checkServiceRequestNums(3, 0, 0, 4);
+    }
+
+    @Test
+    void getDataFromLocationForecastInvalidInputs() {
+        Mockito.when(owmService
+                .getDataFromLocationForecast(Mockito.anyString(), Mockito.anyString()))
+                .thenReturn(forecastData);
+
+        assertThat(cacheService.getDataFromLocationForecast("","")).isEqualTo(forecastData);
+        assertThat(cacheService.getDataFromLocationForecast("","1")).isEqualTo(forecastData);
+        assertThat(cacheService.getDataFromLocationForecast("","12")).isEqualTo(forecastData);
+        assertThat(cacheService.getDataFromLocationForecast("","123")).isEqualTo(null);
+        checkServiceRequestNums(3, 0, 0, 1);
+    }
+
+    @Test
+    void getDataFromCoordsForecastInvalidInputs() {
+        Mockito.when(owmService
+                .getDataFromCoordsForecast(Mockito.anyDouble(), Mockito.anyDouble()))
+                .thenReturn(forecastData);
+
+        assertThat(cacheService.getDataFromCoordsForecast(0,0)).isEqualTo(forecastData);
+        assertThat(cacheService.getDataFromCoordsForecast(90,180)).isEqualTo(forecastData);
+        assertThat(cacheService.getDataFromCoordsForecast(-90,-180)).isEqualTo(forecastData);
+        assertThat(cacheService.getDataFromCoordsForecast(-90.1,0)).isEqualTo(null);
+        assertThat(cacheService.getDataFromCoordsForecast(90.1,0)).isEqualTo(null);
+        assertThat(cacheService.getDataFromCoordsForecast(0,-180.1)).isEqualTo(null);
+        assertThat(cacheService.getDataFromCoordsForecast(0,180.1)).isEqualTo(null);
+        checkServiceRequestNums(3, 0, 0, 4);
     }
 
     private void checkServiceRequestNums(int owm, int wb, int c, int f) {

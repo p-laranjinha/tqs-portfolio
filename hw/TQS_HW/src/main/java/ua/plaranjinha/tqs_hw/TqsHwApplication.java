@@ -10,9 +10,4 @@ public class TqsHwApplication {
 		SpringApplication.run(TqsHwApplication.class, args);
 	}
 
-	//TODO:
-	// Input validation / Exception handling (REST country code length (the nulls may be enough))
-	// Logging (which doesnt mess with testing)
-	// Selenium tests
-	// 14/05 - Deliver report of the WHOLE app
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -19,8 +20,18 @@ import static org.apache.logging.log4j.message.MapMessage.MapFormat.JSON;
 
 @org.springframework.stereotype.Controller
 public class Controller {
+    /*
+    * I'm treating the frontend as a separate app from the service by making it
+    * request from the rest controller instead of directly from the service
+    *
+    * Would also be simple to make it otherwise but found it more interesting this way
+    */
+
     @Value("${spring.application.name}")
     String appName;
+
+    @Autowired
+    Logger logger;
 
     @Autowired
     RestTemplate restTemplate;
@@ -35,6 +46,8 @@ public class Controller {
             @RequestParam(name="type", required = false) String type,
             Model model) {
         model.addAttribute("appName", appName);
+
+        logger.info(String.format("WEB: request=%s, type=%s, location=%s, country_code=%s, lat=%s, lon=%s", request, type, location, countryCode, lat, lon));
 
         if (request != null) switch (request) {
             case "location":

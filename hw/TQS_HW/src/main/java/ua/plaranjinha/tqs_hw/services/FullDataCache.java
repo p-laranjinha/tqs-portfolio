@@ -44,13 +44,15 @@ public class FullDataCache {
 
     public CacheData remove(StringKey key) {
         CacheData data = locationCache.remove(key);
-        coordsCache.remove(new DoubleKey(data.getData().getCoordinates().getLat(), data.getData().getCoordinates().getLon()));
+        if (data != null)
+            coordsCache.remove(new DoubleKey(data.getData().getCoordinates().getLat(), data.getData().getCoordinates().getLon()));
         return data;
     }
 
     public CacheData remove(DoubleKey key) {
         CacheData data = coordsCache.remove(key);
-        locationCache.remove(new StringKey(data.getData().getLocation(), data.getData().getCountry_code()));
+        if (data != null)
+            locationCache.remove(new StringKey(data.getData().getLocation(), data.getData().getCountry_code()));
         return data;
     }
 
