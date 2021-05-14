@@ -6,6 +6,7 @@ import ua.plaranjinha.tqs_hw.datamodels.FullData;
 import ua.plaranjinha.tqs_hw.datamodels.StringKey;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class FullDataCache {
     private final HashMap<StringKey, CacheData> locationCache = new HashMap<>();
@@ -74,8 +75,12 @@ public class FullDataCache {
     }
 
     private void clearExpired() {
-        for (DoubleKey key : coordsCache.keySet())
-            if (expired(coordsCache.get(key)))
-                remove(key);
+        Iterator<DoubleKey> it = coordsCache.keySet().iterator();
+        while (it.hasNext()) {
+            DoubleKey key = it.next();
+            CacheData data = coordsCache.get(key);
+            if (expired(data) && data != null)
+                it.remove();
+        }
     }
 }
